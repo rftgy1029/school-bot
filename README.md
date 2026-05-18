@@ -23,45 +23,6 @@
 - localStorage
 - Vercel
 
-
-## 시작하기
-
-이 저장소에는 Next.js App Router 기반의 초기 앱 구조가 포함되어 있습니다.
-
-처음 실행하거나 저장소를 새로 받은 뒤에는 의존성을 먼저 설치해야 합니다. `next: not found` 오류가 나오면 아직 `node_modules`가 설치되지 않은 상태입니다.
-
-```bash
-npm install
-npm run dev
-```
-
-개발 서버가 실행되면 `http://localhost:3000`에서 웹앱을 확인할 수 있습니다.
-
-## 자주 나는 오류
-
-### `sh: 1: next: not found`
-
-`npm run dev`가 `package.json`의 `next dev` 스크립트를 실행했지만, 로컬 의존성 폴더인 `node_modules`에 Next.js가 없을 때 발생합니다. 아래 명령어로 의존성을 설치한 뒤 다시 실행하세요.
-
-```bash
-npm install
-npm run dev
-```
-
-설치가 계속 실패하면 Node.js 버전을 확인하고, npm 캐시와 기존 설치물을 지운 뒤 다시 설치합니다.
-
-```bash
-node --version
-npm --version
-rm -rf node_modules package-lock.json
-npm install
-npm run dev
-```
-
-### `Configuring Next.js via 'next.config.ts' is not supported`
-
-일부 Next.js 버전에서는 TypeScript 설정 파일인 `next.config.ts`를 읽지 못합니다. 이 프로젝트는 호환성을 위해 CommonJS 형식의 `next.config.js`를 사용합니다.
-
 ## 설계 문서
 
 자세한 Next.js 앱 설계는 [`docs/nextjs-design.md`](docs/nextjs-design.md)를 참고하세요.
