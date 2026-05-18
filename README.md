@@ -23,18 +23,6 @@
 - localStorage
 - Vercel
 
-
-## 시작하기
-
-이 저장소에는 Next.js App Router 기반의 초기 앱 구조가 포함되어 있습니다.
-
-```bash
-npm install
-npm run dev
-```
-
-개발 서버가 실행되면 `http://localhost:3000`에서 웹앱을 확인할 수 있습니다.
-
 ## 설계 문서
 
 자세한 Next.js 앱 설계는 [`docs/nextjs-design.md`](docs/nextjs-design.md)를 참고하세요.
