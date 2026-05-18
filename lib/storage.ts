@@ -8,7 +8,21 @@ import { defaultTimetable } from './timetable';
 const settingsKey = 'school-bot:settings';
 const timetableKey = 'school-bot:timetable';
 
-const defaultSettings: SchoolSettings = {
+export const fixedSchoolCodes = {
+  educationOfficeCode: 'G10',
+  schoolCode: '7430059',
+} as const;
+
+export const defaultSettings: SchoolSettings = {
+  schoolName: '서대전고등학교',
+  educationOfficeCode: fixedSchoolCodes.educationOfficeCode,
+  schoolCode: fixedSchoolCodes.schoolCode,
+  grade: '2',
+  classNumber: '1',
+  mealType: 'lunch',
+};
+
+const legacyDefaultSettings: SchoolSettings = {
   schoolName: '우리학교',
   educationOfficeCode: 'B10',
   schoolCode: '7010111',
@@ -38,16 +52,37 @@ function writeJson<T>(key: string, value: T): void {
   window.localStorage.setItem(key, JSON.stringify(value));
 }
 
+function normalizeSettings(settings: SchoolSettings): SchoolSettings {
+  const isLegacyDefault =
+    settings.schoolName === legacyDefaultSettings.schoolName &&
+    settings.educationOfficeCode === legacyDefaultSettings.educationOfficeCode &&
+    settings.schoolCode === legacyDefaultSettings.schoolCode &&
+    settings.grade === legacyDefaultSettings.grade &&
+    settings.classNumber === legacyDefaultSettings.classNumber;
+
+  if (isLegacyDefault) {
+    return defaultSettings;
+  }
+
+  return {
+    ...defaultSettings,
+    ...settings,
+    educationOfficeCode: fixedSchoolCodes.educationOfficeCode,
+    schoolCode: fixedSchoolCodes.schoolCode,
+  };
+}
+
 export function useSchoolSettings() {
   const [settings, setSettings] = useState<SchoolSettings>(defaultSettings);
 
   useEffect(() => {
-    setSettings(readJson(settingsKey, defaultSettings));
+    setSettings(normalizeSettings(readJson(settingsKey, defaultSettings)));
   }, []);
 
   function saveSettings(nextSettings: SchoolSettings) {
-    setSettings(nextSettings);
-    writeJson(settingsKey, nextSettings);
+    const normalizedSettings = normalizeSettings(nextSettings);
+    setSettings(normalizedSettings);
+    writeJson(settingsKey, normalizedSettings);
   }
 
   return { settings, saveSettings };
