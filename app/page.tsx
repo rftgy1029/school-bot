@@ -34,7 +34,7 @@ export default function HomePage() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <EmptyState title="급식 정보 준비 중" description="테스트 급식값은 제거했습니다. NEIS 연동 후 서대전고등학교 급식이 표시됩니다." />
+        <EmptyState title="급식 정보 준비 중" description="NEIS 연동 후 서대전고등학교 급식이 표시됩니다." />
         {todayKey && todaySubjects.length > 0 ? (
           <TimetableCard dayLabel={weekdayLabels[todayKey]} subjects={todaySubjects} isToday />
         ) : todayKey ? (
