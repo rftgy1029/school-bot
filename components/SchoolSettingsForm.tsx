@@ -1,7 +1,7 @@
 'use client';
 
 import type { FormEvent } from 'react';
-import { useSchoolSettings } from '@/lib/storage';
+import { fixedSchoolCodes, useSchoolSettings } from '@/lib/storage';
 
 export function SchoolSettingsForm() {
   const { settings, saveSettings } = useSchoolSettings();
@@ -12,8 +12,8 @@ export function SchoolSettingsForm() {
 
     saveSettings({
       schoolName: String(formData.get('schoolName') ?? ''),
-      educationOfficeCode: String(formData.get('educationOfficeCode') ?? ''),
-      schoolCode: String(formData.get('schoolCode') ?? ''),
+      educationOfficeCode: fixedSchoolCodes.educationOfficeCode,
+      schoolCode: fixedSchoolCodes.schoolCode,
       grade: String(formData.get('grade') ?? ''),
       classNumber: String(formData.get('classNumber') ?? ''),
       mealType: 'lunch',
@@ -33,11 +33,25 @@ export function SchoolSettingsForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="block">
           <span className="text-sm font-semibold text-slate-700">교육청 코드</span>
-          <input name="educationOfficeCode" defaultValue={settings.educationOfficeCode} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
+          <input
+            name="educationOfficeCode"
+            value={fixedSchoolCodes.educationOfficeCode}
+            readOnly
+            aria-readonly="true"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-slate-600"
+          />
+          <span className="mt-1 block text-xs font-medium text-slate-500">서대전고등학교 기본값으로 고정</span>
         </label>
         <label className="block">
           <span className="text-sm font-semibold text-slate-700">학교 코드</span>
-          <input name="schoolCode" defaultValue={settings.schoolCode} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
+          <input
+            name="schoolCode"
+            value={fixedSchoolCodes.schoolCode}
+            readOnly
+            aria-readonly="true"
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-slate-600"
+          />
+          <span className="mt-1 block text-xs font-medium text-slate-500">서대전고등학교 기본값으로 고정</span>
         </label>
         <label className="block">
           <span className="text-sm font-semibold text-slate-700">학년</span>
