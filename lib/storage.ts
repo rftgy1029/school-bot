@@ -2,11 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import type { SchoolSettings } from '@/types/settings';
-import type { Timetable } from '@/types/timetable';
-import { defaultTimetable } from './timetable';
 
 const settingsKey = 'school-bot:settings';
-const timetableKey = 'school-bot:timetable';
 
 export const fixedSchoolCodes = {
   educationOfficeCode: 'G10',
@@ -86,19 +83,4 @@ export function useSchoolSettings() {
   }
 
   return { settings, saveSettings };
-}
-
-export function useTimetable() {
-  const [timetable, setTimetable] = useState<Timetable>(defaultTimetable);
-
-  useEffect(() => {
-    setTimetable(readJson(timetableKey, defaultTimetable));
-  }, []);
-
-  function saveTimetable(nextTimetable: Timetable) {
-    setTimetable(nextTimetable);
-    writeJson(timetableKey, nextTimetable);
-  }
-
-  return { timetable, saveTimetable };
 }
