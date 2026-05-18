@@ -125,7 +125,7 @@ export async function GET() {
   const data = (await response.json()) as NeisMealResponse;
   const rows = data.mealServiceDietInfo?.[1]?.row ?? [];
 
-  if (data.RESULT?.CODE && data.RESULT.CODE !== 'INFO-200') {
+  if (data.RESULT?.CODE?.startsWith('ERROR')) {
     return NextResponse.json({ meals: [], error: data.RESULT.MESSAGE ?? 'NEIS 응답을 처리하지 못했습니다.' }, { status: 502 });
   }
 

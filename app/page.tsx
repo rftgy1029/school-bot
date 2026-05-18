@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { EmptyState } from '@/components/EmptyState';
+import { MealSection } from '@/components/MealSection';
 import { TimetableCard } from '@/components/TimetableCard';
 import { formatKoreanDate, getTodayWeekdayKey, weekdayLabels } from '@/lib/dates';
-import { fixedSchoolCodes, useSchoolSettings, useTimetable } from '@/lib/storage';
+import { useSchoolSettings, useTimetable } from '@/lib/storage';
 
 export default function HomePage() {
   const { settings } = useSchoolSettings();
@@ -22,19 +23,8 @@ export default function HomePage() {
         </p>
       </section>
 
-      <section className="grid gap-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-soft sm:grid-cols-2">
-        <div>
-          <p className="text-sm font-semibold text-slate-500">교육청 코드</p>
-          <p className="mt-1 text-2xl font-black text-slate-950">{fixedSchoolCodes.educationOfficeCode}</p>
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-slate-500">학교 코드</p>
-          <p className="mt-1 text-2xl font-black text-slate-950">{fixedSchoolCodes.schoolCode}</p>
-        </div>
-      </section>
-
       <div className="grid gap-6 lg:grid-cols-2">
-        <EmptyState title="급식 정보 준비 중" description="NEIS 연동 후 서대전고등학교 급식이 표시됩니다." />
+        <MealSection emptyDescription="주말, 공휴일, 방학이거나 NEIS에 오늘 급식이 아직 등록되지 않았을 수 있어요." />
         {todayKey && todaySubjects.length > 0 ? (
           <TimetableCard dayLabel={weekdayLabels[todayKey]} subjects={todaySubjects} isToday />
         ) : todayKey ? (
