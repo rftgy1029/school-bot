@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { MealSection } from '@/components/MealSection';
 import { TimetableSection } from '@/components/TimetableSection';
 import { formatKoreanDate } from '@/lib/dates';
@@ -24,9 +23,14 @@ export default function HomePage() {
         <TimetableSection grade={settings.grade} classNumber={settings.classNumber} />
       </div>
 
-      <Link href="/settings" className="inline-flex rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white">
-        설정 확인하기
-      </Link>
+      <a
+        href="https://sdjhs.riroschool.kr/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white"
+      >
+        서대전고 리로스쿨
+      </a>
     </main>
   );
 }
