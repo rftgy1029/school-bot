@@ -10,7 +10,32 @@ type MealCardProps = {
   meal: Meal;
 };
 
+function formatCalorie(value?: string): string | null {
+  if (!value) {
+    return null;
+  }
+
+  const normalized = value.replace(/\s+/g, ' ').trim();
+  const numberMatch = normalized.match(/\d+(?:[.,]\d+)?/);
+
+  if (!numberMatch) {
+    return normalized.replace(/kcal/gi, 'kcal');
+  }
+
+  const parsed = Number.parseFloat(numberMatch[0].replace(',', '.'));
+  const amount = Number.isFinite(parsed)
+    ? new Intl.NumberFormat('ko-KR', {
+        minimumFractionDigits: Number.isInteger(parsed) ? 0 : 1,
+        maximumFractionDigits: 1,
+      }).format(parsed)
+    : numberMatch[0];
+
+  return `${amount} kcal`;
+}
+
 export function MealCard({ meal }: MealCardProps) {
+  const calorieText = formatCalorie(meal.calorie);
+
   return (
     <article className="rounded-3xl border border-slate-200 bg-white p-5 shadow-soft">
       <div className="mb-4 flex items-center justify-between gap-4">
@@ -18,8 +43,10 @@ export function MealCard({ meal }: MealCardProps) {
           <p className="text-sm font-medium text-brand-600">{meal.date}</p>
           <h3 className="text-xl font-bold text-slate-950">{mealTypeLabels[meal.mealType]}</h3>
         </div>
-        {meal.calorie ? (
-          <span className="rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">{meal.calorie}</span>
+        {calorieText ? (
+          <span className="whitespace-nowrap rounded-full bg-brand-50 px-3 py-1 text-sm font-semibold text-brand-700">
+            {calorieText}
+          </span>
         ) : null}
       </div>
 
