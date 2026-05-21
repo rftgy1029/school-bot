@@ -1,9 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import type { Meal } from '@/types/meal';
 
 const neisMealUrl = 'https://open.neis.go.kr/hub/mealServiceDietInfo';
-const educationOfficeCode = 'G10';
-const schoolCode = '7430059';
 
 export const dynamic = 'force-dynamic';
 
@@ -97,11 +95,24 @@ function mapMeal(row: NeisMealRow): Meal {
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const apiKey = process.env.NEIS_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json({ meals: [], error: 'Vercel 환경변수 NEIS_API_KEY가 없습니다.' }, { status: 500 });
+  }
+
+  const officeCode = request.nextUrl.searchParams.get('officeCode')?.trim() || '';
+  const schoolCode = request.nextUrl.searchParams.get('schoolCode')?.trim() || '';
+  const from = request.nextUrl.searchParams.get('from')?.trim() || getTodayYmd();
+  const to = request.nextUrl.searchParams.get('to')?.trim() || from;
+
+  if (!/^[A-Z]\d{2}$/.test(officeCode) || !/^\d{7}$/.test(schoolCode)) {
+    return NextResponse.json({ meals: [], error: '교육청 코드 또는 학교 코드 형식이 올바르지 않습니다.' }, { status: 400 });
+  }
+
+  if (!/^\d{8}$/.test(from) || !/^\d{8}$/.test(to)) {
+    return NextResponse.json({ meals: [], error: '조회 날짜 형식이 올바르지 않습니다.' }, { status: 400 });
   }
 
   const params = new URLSearchParams({
@@ -109,9 +120,10 @@ export async function GET() {
     Type: 'json',
     pIndex: '1',
     pSize: '100',
-    ATPT_OFCDC_SC_CODE: educationOfficeCode,
+    ATPT_OFCDC_SC_CODE: officeCode,
     SD_SCHUL_CODE: schoolCode,
-    MLSV_YMD: getTodayYmd(),
+    MLSV_FROM_YMD: from,
+    MLSV_TO_YMD: to,
   });
 
   const response = await fetch(`${neisMealUrl}?${params}`, {

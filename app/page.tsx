@@ -3,10 +3,11 @@
 import { MealSection } from '@/components/MealSection';
 import { TimetableSection } from '@/components/TimetableSection';
 import { formatKoreanDate } from '@/lib/dates';
-import { useSchoolSettings } from '@/lib/storage';
+import { useSchoolSettings, useTimetable } from '@/lib/storage';
 
 export default function HomePage() {
   const { settings } = useSchoolSettings();
+  const { timetable } = useTimetable();
 
   return (
     <main className="space-y-6">
@@ -19,18 +20,20 @@ export default function HomePage() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <MealSection emptyDescription="주말, 공휴일, 방학이거나 NEIS에 오늘 급식이 아직 등록되지 않았을 수 있어요." />
-        <TimetableSection grade={settings.grade} classNumber={settings.classNumber} />
+        <MealSection
+          officeCode={settings.educationOfficeCode}
+          schoolCode={settings.schoolCode}
+          emptyDescription="주말, 공휴일, 방학이거나 NEIS에 오늘 급식이 아직 등록되지 않았을 수 있어요."
+        />
+        <TimetableSection
+          grade={settings.grade}
+          classNumber={settings.classNumber}
+          officeCode={settings.educationOfficeCode}
+          schoolCode={settings.schoolCode}
+          source="neis"
+          localTimetable={timetable}
+        />
       </div>
-
-      <a
-        href="https://sdjhs.riroschool.kr/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex rounded-2xl bg-slate-950 px-5 py-3 font-bold text-white"
-      >
-        서대전고 리로스쿨
-      </a>
     </main>
   );
 }
