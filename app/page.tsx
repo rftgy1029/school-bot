@@ -34,6 +34,23 @@ export default function HomePage() {
           localTimetable={timetable}
         />
       </div>
+
+      {settings.padletUrl ? (
+        <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-soft sm:p-5">
+          <h2 className="text-xl font-black text-slate-950">학급 공지사항</h2>
+          <p className="mt-2 text-sm text-slate-600">담임 공지, 수행평가, 준비물을 Padlet에서 바로 확인할 수 있어요.</p>
+          <div className="mt-4 overflow-hidden rounded-2xl border border-slate-100">
+            <iframe
+              src={settings.padletUrl}
+              title="학급 공지 Padlet"
+              className="h-[560px] w-full md:h-[680px]"
+              allow="camera;microphone;geolocation"
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+            />
+          </div>
+        </section>
+      ) : null}
     </main>
   );
 }

@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
+import { normalizePadletUrl } from '@/lib/padlet';
 import type { SchoolSettings } from '@/types/settings';
 import type { Timetable, WeekdayKey } from '@/types/timetable';
 
 const settingsKey = 'school-bot:settings';
 const timetableKey = 'school-bot:timetable';
+const defaultPadletUrl = 'https://padlet.com/25sdj115/2-1-vlm4vpq98okxy91x';
 
 const schoolSettingsSchema = z.object({
   schoolName: z.string().trim().min(1, '학교명을 입력해 주세요.').max(40, '학교명은 40자 이내로 입력해 주세요.'),
@@ -15,6 +17,7 @@ const schoolSettingsSchema = z.object({
   grade: z.string().trim().regex(/^[1-6]$/, '학년은 1~6 사이 숫자로 입력해 주세요.'),
   classNumber: z.string().trim().regex(/^\d{1,2}$/, '반은 1~99 사이 숫자로 입력해 주세요.'),
   mealType: z.enum(['breakfast', 'lunch', 'dinner']),
+  padletUrl: z.string().trim().default(defaultPadletUrl),
 });
 
 const weekdayKeys: WeekdayKey[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
@@ -34,6 +37,7 @@ export const defaultSettings: SchoolSettings = {
   grade: '2',
   classNumber: '1',
   mealType: 'lunch',
+  padletUrl: defaultPadletUrl,
 };
 
 export const defaultTimetable: Timetable = {
@@ -71,7 +75,17 @@ function normalizeSettings(settings: SchoolSettings): SchoolSettings {
     return defaultSettings;
   }
 
-  return parsed.data;
+  const normalizedPadletUrl = normalizePadletUrl(parsed.data.padletUrl) || defaultSettings.padletUrl;
+
+  return {
+    schoolName: parsed.data.schoolName,
+    educationOfficeCode: parsed.data.educationOfficeCode,
+    schoolCode: parsed.data.schoolCode,
+    grade: parsed.data.grade,
+    classNumber: parsed.data.classNumber,
+    mealType: parsed.data.mealType,
+    padletUrl: normalizedPadletUrl,
+  };
 }
 
 function normalizeTimetable(timetable: Timetable): Timetable {

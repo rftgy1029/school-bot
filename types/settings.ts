@@ -7,4 +7,5 @@ export type SchoolSettings = {
   grade: string;
   classNumber: string;
   mealType: MealType;
+  padletUrl: string;
 };

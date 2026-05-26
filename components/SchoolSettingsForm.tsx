@@ -11,7 +11,7 @@ export function SchoolSettingsForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const formKey = useMemo(
-    () => `${settings.schoolName}-${settings.educationOfficeCode}-${settings.schoolCode}-${settings.grade}-${settings.classNumber}`,
+    () => `${settings.schoolName}-${settings.educationOfficeCode}-${settings.schoolCode}-${settings.grade}-${settings.classNumber}-${settings.padletUrl}`,
     [settings],
   );
 
@@ -40,6 +40,7 @@ export function SchoolSettingsForm() {
       grade: String(formData.get('grade') ?? ''),
       classNumber: String(formData.get('classNumber') ?? ''),
       mealType: 'lunch',
+      padletUrl: settings.padletUrl,
     };
 
     try {
@@ -100,6 +101,16 @@ export function SchoolSettingsForm() {
             <input name="classNumber" defaultValue={settings.classNumber} inputMode="numeric" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
           </label>
         </div>
+
+        <label className="block">
+          <span className="text-sm font-semibold text-slate-700">학급 공지 Padlet 링크</span>
+          <input
+            value={settings.padletUrl}
+            readOnly
+            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600"
+            aria-readonly="true"
+          />
+        </label>
 
         {errorMessage ? <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{errorMessage}</p> : null}
 

@@ -60,11 +60,27 @@ function getAcademicYearAndSemester(referenceYmd?: string) {
 }
 
 function toSubjects(rows: NeisTimetableRow[]): string[] {
-  return rows
-    .slice()
-    .sort((left, right) => Number(left.PERIO ?? 0) - Number(right.PERIO ?? 0))
-    .map((row) => row.ITRT_CNTNT?.trim() ?? '')
-    .filter(Boolean);
+  if (rows.length === 0) {
+    return [];
+  }
+
+  const subjects = Array.from({ length: 7 }, () => '');
+
+  for (const row of rows) {
+    const period = Number(row.PERIO ?? '');
+    if (!Number.isInteger(period) || period < 1 || period > 7) {
+      continue;
+    }
+
+    const subject = row.ITRT_CNTNT?.trim() ?? '';
+    if (!subject) {
+      continue;
+    }
+
+    subjects[period - 1] = subject;
+  }
+
+  return subjects.some((subject) => subject.length > 0) ? subjects : [];
 }
 
 export async function GET(request: NextRequest) {
