@@ -1,5 +1,6 @@
 const padletHosts = new Set(['padlet.com', 'www.padlet.com']);
 const iframeSrcPattern = /src\s*=\s*(['"])(.*?)\1/i;
+const uniqueIdPattern = /([a-z0-9]{10,24})$/i;
 
 function parseUrl(value: string): URL | null {
   try {
@@ -37,16 +38,30 @@ function toEmbedUrl(parsed: URL): string {
     return '';
   }
 
+  const uniqueId = findPadletUniqueId(segments);
+  if (uniqueId) {
+    return `https://padlet.com/embed/${uniqueId}`;
+  }
+
   if (segments[0] === 'embed' && segments[1]) {
     return `https://padlet.com/embed/${segments[1]}`;
   }
 
-  if (segments.length >= 2) {
-    const boardId = segments[segments.length - 1];
-    return `https://padlet.com/embed/${boardId}`;
+  return parsed.toString();
+}
+
+function findPadletUniqueId(segments: string[]): string | null {
+  for (const segment of [...segments].reverse()) {
+    const decoded = decodeURIComponent(segment).trim();
+    const match = decoded.match(uniqueIdPattern);
+    if (!match?.[1]) {
+      continue;
+    }
+
+    return match[1].toLowerCase();
   }
 
-  return parsed.toString();
+  return null;
 }
 
 export function normalizePadletUrl(value: string): string {
