@@ -1,10 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { format } from 'date-fns';
 import { EmptyState } from '@/components/EmptyState';
 import { TimetableCard } from '@/components/TimetableCard';
-import { getTodayWeekdayKey, weekdayLabels } from '@/lib/dates';
+import { getTodayWeekdayKey, getTodayYmdInSeoul, weekdayLabels } from '@/lib/dates';
 import type { Timetable } from '@/types/timetable';
 
 type TimetableResponse = {
@@ -49,7 +48,7 @@ export function TimetableSection({ grade, classNumber, officeCode, schoolCode, s
         classNumber,
         officeCode,
         schoolCode,
-        date: format(new Date(), 'yyyyMMdd'),
+        date: getTodayYmdInSeoul(),
       });
       const response = await fetch(`/api/timetable?${params}`, { cache: 'no-store' });
       const data = (await response.json()) as TimetableResponse;

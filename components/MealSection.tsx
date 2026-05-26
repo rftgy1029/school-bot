@@ -1,9 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { addDays, format } from 'date-fns';
 import { EmptyState } from '@/components/EmptyState';
 import { MealCard } from '@/components/MealCard';
+import { getCurrentWeekRangeYmdInSeoul, getTodayYmdInSeoul, getTomorrowYmdInSeoul } from '@/lib/dates';
 import type { Meal } from '@/types/meal';
 
 type MealsResponse = {
@@ -25,24 +25,17 @@ const scopeLabels: Record<MealScope, string> = {
   week: '이번 주',
 };
 
-function formatYmd(date: Date): string {
-  return format(date, 'yyyyMMdd');
-}
-
 function getRange(scope: MealScope) {
-  const now = new Date();
-
   if (scope === 'tomorrow') {
-    const tomorrow = addDays(now, 1);
-    return { from: formatYmd(tomorrow), to: formatYmd(tomorrow) };
+    const tomorrow = getTomorrowYmdInSeoul();
+    return { from: tomorrow, to: tomorrow };
   }
 
   if (scope === 'week') {
-    const sunday = addDays(now, 6 - now.getDay());
-    return { from: formatYmd(now), to: formatYmd(sunday) };
+    return getCurrentWeekRangeYmdInSeoul();
   }
 
-  const today = formatYmd(now);
+  const today = getTodayYmdInSeoul();
   return { from: today, to: today };
 }
 

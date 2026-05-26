@@ -11,7 +11,8 @@ export function SchoolSettingsForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const formKey = useMemo(
-    () => `${settings.schoolName}-${settings.educationOfficeCode}-${settings.schoolCode}-${settings.grade}-${settings.classNumber}-${settings.padletUrl}`,
+    () =>
+      `${settings.schoolName}-${settings.educationOfficeCode}-${settings.schoolCode}-${settings.grade}-${settings.classNumber}-${settings.mealType}-${settings.padletUrl}`,
     [settings],
   );
 
@@ -39,20 +40,16 @@ export function SchoolSettingsForm() {
       schoolCode: String(formData.get('schoolCode') ?? ''),
       grade: String(formData.get('grade') ?? ''),
       classNumber: String(formData.get('classNumber') ?? ''),
-      mealType: 'lunch',
-      padletUrl: settings.padletUrl,
+      mealType: String(formData.get('mealType') ?? settings.mealType) as SchoolSettings['mealType'],
+      padletUrl: String(formData.get('padletUrl') ?? ''),
     };
 
     try {
       const validated = settingsSchema.parse(nextSettings);
-      const changedClassInfo = validated.grade !== settings.grade || validated.classNumber !== settings.classNumber;
 
       saveSettings(validated);
       setErrorMessage(null);
-
-      if (changedClassInfo) {
-        setShowCompleteMessage(true);
-      }
+      setShowCompleteMessage(true);
     } catch (error) {
       if (error instanceof ZodError) {
         setErrorMessage(error.issues[0]?.message ?? '입력값을 확인해 주세요.');
@@ -98,9 +95,9 @@ export function SchoolSettingsForm() {
               name="grade"
               defaultValue={settings.grade}
               inputMode="numeric"
-              readOnly
-              aria-readonly="true"
-              className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600"
+              maxLength={1}
+              placeholder="1~6"
+              className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
             />
           </label>
           <label className="block">
@@ -109,20 +106,29 @@ export function SchoolSettingsForm() {
               name="classNumber"
               defaultValue={settings.classNumber}
               inputMode="numeric"
-              readOnly
-              aria-readonly="true"
-              className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600"
+              maxLength={2}
+              placeholder="1~99"
+              className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
             />
           </label>
         </div>
 
         <label className="block">
+          <span className="text-sm font-semibold text-slate-700">기본 급식 종류</span>
+          <select name="mealType" defaultValue={settings.mealType} className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3">
+            <option value="breakfast">조식</option>
+            <option value="lunch">중식</option>
+            <option value="dinner">석식</option>
+          </select>
+        </label>
+
+        <label className="block">
           <span className="text-sm font-semibold text-slate-700">학급 공지 Padlet 링크</span>
           <input
-            value={settings.padletUrl}
-            readOnly
-            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600"
-            aria-readonly="true"
+            name="padletUrl"
+            defaultValue={settings.padletUrl}
+            placeholder="Padlet 링크 또는 임베드 코드"
+            className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3"
           />
         </label>
 
