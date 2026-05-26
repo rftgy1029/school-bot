@@ -94,11 +94,25 @@ export function SchoolSettingsForm() {
           </label>
           <label className="block">
             <span className="text-sm font-semibold text-slate-700">학년</span>
-            <input name="grade" defaultValue={settings.grade} inputMode="numeric" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
+            <input
+              name="grade"
+              defaultValue={settings.grade}
+              inputMode="numeric"
+              readOnly
+              aria-readonly="true"
+              className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600"
+            />
           </label>
           <label className="block">
             <span className="text-sm font-semibold text-slate-700">반</span>
-            <input name="classNumber" defaultValue={settings.classNumber} inputMode="numeric" className="mt-2 w-full rounded-2xl border border-slate-200 px-4 py-3" />
+            <input
+              name="classNumber"
+              defaultValue={settings.classNumber}
+              inputMode="numeric"
+              readOnly
+              aria-readonly="true"
+              className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600"
+            />
           </label>
         </div>
 
